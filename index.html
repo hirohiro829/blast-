@@ -1,0 +1,72 @@
+<!doctype html><html lang="ja"><meta charset="utf-8">
+<title>胚盤胞グレード別 成績早見表</title>
+<h2>胚移植 成績チェッカー</h2>
+
+<label>年齢層:
+  <select id="age">
+    <option value="lt34">&lt;34</option>
+    <option value="35_39">35–39</option>
+    <option value="40_42">40–42</option>
+    <option value="gte43">≥43</option>
+  </select>
+</label>
+<label style="margin-left:1em;">胚グレード:
+  <select id="grade">
+    <option>4AA</option><option>4BA</option><option>4CA</option>
+    <option>4AB</option><option>4BB</option><option>4CB</option>
+    <option>4AC</option><option>4BC</option><option>4CC</option>
+  </select>
+</label>
+<label style="margin-left:1em;">凍結日:
+  <select id="day"><option>D5</option><option>D6</option></select>
+</label>
+<button onclick="show()">計算</button>
+
+<h3 id="out"></h3>
+
+<script>
+// ------- データ（着床率, 妊娠率, 流産率） -------
+const RATES = {
+  lt34:{ D5:{'4AA':[73.1,64.6,12.5],'4BA':[71.5,61.1,11.5],'4CA':[75,50,0],
+                 '4AB':[69.4,59.1,14.1],'4BB':[66,53.5,18.9],'4CB':[63.9,44.4,37.5],
+                 '4AC':[62.5,43.8,14.3],'4BC':[62.2,51.1,19.6],'4CC':[56.5,34.8,25]},
+         D6:{'4AA':[73.7,54.7,17.3],'4BA':[65.3,45.3,20.9],'4CA':[66.7,33.3,50],
+                 '4AB':[59.4,52.1,26],'4BB':[55.6,39.2,16.4],'4CB':[51.1,25.5,25],
+                 '4AC':[41.7,16.7,50],'4BC':[45.2,28.1,24.4],'4CC':[45.3,20.9,38.9]}},
+  "35_39":{ D5:{'4AA':[67.9,57.2,19.9],'4BA':[65.8,55.1,22.4],'4CA':[83.3,66.7,33.3],
+                    '4AB':[58.4,46.5,23.5],'4BB':[56,41.4,21.5],'4CB':[46.9,34.4,36.4],
+                    '4AC':[38.1,23.8,0],'4BC':[43,34.9,26.7],'4CC':[39.5,21.1,50]},
+             D6:{'4AA':[70.3,58.4,32.2],'4BA':[64.8,52.7,31.3],'4CA':[50,16.7,0],
+                    '4AB':[61.2,48.9,20.6],'4BB':[46.3,30.2,29.9],'4CB':[50.8,25.4,31.3],
+                    '4AC':[36.4,27.3,33.3],'4BC':[36.9,25.3,47.4],'4CC':[31.6,12.5,23.5]}},
+  "40_42":{ D5:{'4AA':[66.8,48.5,34.2],'4BA':[63.7,51,34.6],'4CA':[75,25,0],
+                    '4AB':[50.2,32.9,35.1],'4BB':[48.5,32.1,36.5],'4CB':[50,37.5,50],
+                    '4AC':[16.7,16.7,100],'4BC':[26,14,42.9],'4CC':[35.3,17.6,0]},
+             D6:{'4AA':[50,36.4,37.5],'4BA':[50,29.2,14.3],'4CA':[100,50,100],
+                    '4AB':[44.2,30.2,15.4],'4BB':[46.6,28.4,36],'4CB':[38.2,17.6,33.3],
+                    '4AC':[23.1,19.2,60],'4BC':[22.2,15.8,56],'4CC':[18.3,8.5,57.1]}},
+  gte43:{ D5:{'4AA':[64,40,60],'4BA':[64.3,35.7,60],'4CA':[null,null,null],
+                  '4AB':[37.3,19.6,60],'4BB':[37.3,17.6,44.4],'4CB':[25,0,0],
+                  '4AC':[11.1,11.1,100],'4BC':[15.8,5.3,0],'4CC':[12.5,12.5,0]},
+          D6:{'4AA':[71.4,57.1,100],'4BA':[83.3,66.7,50],'4CA':[null,null,null],
+                  '4AB':[58.3,25,100],'4BB':[14.8,3.7,100],'4CB':[10,0,0],
+                  '4AC':[33.3,33.3,66.7],'4BC':[8.7,1.1,0],'4CC':[11.1,6.7,100]}}
+};
+// ------------- 出力関数 -------------
+function show(){
+  const a=document.getElementById('age').value,
+        g=document.getElementById('grade').value,
+        d=document.getElementById('day').value;
+  const r=RATES?.[a]?.[d]?.[g]||['–','–','–'];
+  document.getElementById('out').innerHTML=
+    `着床率 ${fmt(r[0])} / 臨床妊娠率 ${fmt(r[1])} / 流産率 ${fmt(r[2])}`;
+}
+const fmt=x=>x==null?'データなし':x.toString()+'%';
+</script>
+<style>
+body{font-family:sans-serif;padding:2em;line-height:1.6}
+select{padding:.2em .4em;font-size:1em}
+button{margin-left:1em;padding:.3em .8em;font-size:1em}
+#out{margin-top:1.2em;font-size:1.1em;font-weight:bold}
+</style>
+</html>
